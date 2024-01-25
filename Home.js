@@ -10,12 +10,34 @@ var missionData = null;//stores a list of all mission data
 
 const proxyUrl = "https://cors-proxy.fringe.zone/";
 
+document.addEventListener('DOMContentLoaded', function () {
+    initialiseData();
+});
+
 
 async function initialiseData() {
-    locationData = await loadLocations();
-    itemData = await loadItems();
-    enemyData = await loadEnemies();
-    missionData = await loadMissions();
+    try {
+        // Load all data concurrently
+        const [locations, items, enemies, missions] = await Promise.all([
+            loadLocations(),
+            loadItems(),
+            loadEnemies(),
+            loadMissions()
+        ]);
+
+        // Check if any of the data is null
+        if (!locations || !items || !enemies || !missions) {
+            throw new Error("Failed to load one or more data sets.");
+        }
+
+        // Assign the data to global variables
+        locationData = locations;
+        itemData = items;
+        enemyData = enemies;
+        missionData = missions;
+    } catch (error) {
+        throw error; // Propagate the error to the caller
+    }
 }
 
 function initialFetch() {
@@ -39,26 +61,18 @@ function initialFetch() {
                 if(response.payload.dropsources[i].type == 'mission' && response.payload.dropsources[i].location != null)
                 {
                     getLocationName(response.payload.dropsources[i].location, response.payload.dropsources[i].rate, response.payload.dropsources[i].rarity);
-                    numTs++;
-                    console.log(numTs);
                 }
                 else if(response.payload.dropsources[i].type == 'mission' && response.payload.dropsources[i].location == null)
                 {
                     getMissionName(response.payload.dropsources[i].mission, response.payload.dropsources[i].rate, response.payload.dropsources[i].rarity);
-                    numTs++;
-                    console.log(numTs);
                 }            
                 else if(response.payload.dropsources[i].type == 'npc')
                 {
                     getEnemyName(response.payload.dropsources[i].npc, response.payload.dropsources[i].rate, response.payload.dropsources[i].rarity);
-                    numTs++;
-                    console.log(numTs);
                 }
                 else if(response.payload.dropsources[i].type == 'relic')
                 {
                     getRelicName(response.payload.dropsources[i].relic, response.payload.dropsources[i].rates, response.payload.dropsources[i].rarity);
-                    numTs++;
-                    console.log(numTs);
                 }
             }
             // return response;
@@ -71,9 +85,7 @@ function initialFetch() {
 
 
 function getLocationName(locationID, dropRateLocation, locationRarity) {
-    const url = "https://api.warframe.market/v1/locations";
-
-            console.log(locationData);
+    numTs++;
             for (var i = 0; i < locationData.payload.locations.length; i++) {
                 if (locationData.payload.locations[i].id == locationID) {
                     LocationArray.push(locationData.payload.locations[i].node_name);
@@ -93,40 +105,32 @@ function getLocationName(locationID, dropRateLocation, locationRarity) {
 
 function getEnemyName(enemyId, dropRateEnemy, enemyRarity)
 {
-    const urlEnemy = "https://api.warframe.market/v1/npc";
-    return fetchData(proxyUrl + urlEnemy)
-        .then(response => {
-            for(var j = 0; j < response.payload.npc.length; j++) {
-                if(response.payload.npc[j].id == enemyId)
-                {
-                    detailObject.push({
-                        Enemy: response.payload.npc[j].name,
-                        Rarity: enemyRarity,
-                        Rate: dropRateEnemy,
-                        Icon: response.payload.npc[j].icon,
-                    })
+    numTs++;
+    console.log(enemyData);
+    for(var j = 0; j < enemyData.payload.npc.length; j++) {
+        if(enemyData.payload.npc[j].id == enemyId)
+        {
+            detailObject.push({
+                Enemy: enemyData.payload.npc[j].name,
+                Rarity: enemyRarity,
+                Rate: dropRateEnemy,
+                Icon: enemyData.payload.npc[j].icon,
+            })
                     // console.log(detailObject);
-                    numTRegistered++;
-                    loadSources();
-                }
-            }
-        })
-        .catch(error => {
-            console.error("Error fetching enemy data:", error);
-            return null;
-        });
+            numTRegistered++;
+            loadSources();
+        }
+    }
 }
 
 function getMissionName(missionId, dropRateMission, missionRarity)
 {
-    const urlMission = "https://api.warframe.market/v1/missions";
-    return fetchData(proxyUrl + urlMission)
-        .then(response => {
-            for(var k = 0; k < response.payload.missions.length; k++) {
-                if(response.payload.missions[k].id == missionId)
+    numTs++;
+            for(var k = 0; k < missionData.payload.missions.length; k++) {
+                if(missionData.payload.missions[k].id == missionId)
                 {
                     detailObject.push({
-                        Mission: response.payload.missions[k].name,
+                        Mission: missionData.payload.missions[k].name,
                         Rarity: missionRarity,
                         Rate: dropRateMission
                     })
@@ -135,20 +139,16 @@ function getMissionName(missionId, dropRateMission, missionRarity)
                     loadSources();
                 }
             }
-        })
-        .catch(error => {
-            console.error("Error fetching mission data:", error);
-            return null;
-        });
 }
 
 function getRelicName(relicID, itemRates, relicRarity)
 {
-        for(var l = 0; l < response.payload.items.length; l++) {
-            if(response.payload.items[l].id == relicID)
+    numTs++;
+        for(var l = 0; l < itemData.payload.items.length; l++) {
+            if(itemData.payload.items[l].id == relicID)
             {
                 var status;
-                if(response.payload.items[l].vaulted)
+                if(itemData.payload.items[l].vaulted)
                 {
                     status = "Yes";
                 }
@@ -157,7 +157,7 @@ function getRelicName(relicID, itemRates, relicRarity)
                     status = "No";
                 }
                 detailObject.push({
-                    Relic: response.payload.items[l].item_name,
+                    Relic: itemData.payload.items[l].item_name,
                     Rarity: relicRarity,
                     Rates: itemRates,
                     Vaulted: status
@@ -171,6 +171,8 @@ function getRelicName(relicID, itemRates, relicRarity)
 
 function loadSources()
 {
+    console.log("Fulfilled:"+numTRegistered);
+    console.log("Promised:"+numTs);
     if(numTRegistered == numTs)
     {
         console.log(detailObject);
