@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FrameFinder</title>
+    <script type="stylesheet" src="Home.css"></script>
+    <script src="./Utilities/Loader.js"></script>
+    <script src="Home.js"></script>
+    <!-- Additional head elements (stylesheets, scripts, etc.) can be included here -->
+</head>
+<body>
+    <section class="search">
+        <input type="text" id="itemName" placeholder="Search for an item">
+        <button type="button" onclick="initialFetch()">GO</button>
+        <button type="button" onclick="initialiseData()">TEST</button>
+        <p id="payload">Result Place Holder</p>
+    </section>
+    <script>
+        // This function is defined in Home.js and is called when the page loads
+        initialiseData();
+    </script>
+</body>
+</html>
