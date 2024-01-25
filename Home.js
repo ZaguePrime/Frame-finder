@@ -11,11 +11,11 @@ var missionData = null;//stores a list of all mission data
 const proxyUrl = "https://cors-proxy.fringe.zone/";
 
 
-function initialiseData() {
-    locationData = loadLocations();
-    itemData = loadItems();
-    enemyData = loadEnemies();
-    missionData = loadMissions();
+async function initialiseData() {
+    locationData = await loadLocations();
+    itemData = await loadItems();
+    enemyData = await loadEnemies();
+    missionData = await loadMissions();
 }
 
 function initialFetch() {
@@ -73,31 +73,22 @@ function initialFetch() {
 function getLocationName(locationID, dropRateLocation, locationRarity) {
     const url = "https://api.warframe.market/v1/locations";
 
-    return fetchData(proxyUrl + url)
-        .then(response => {
-            const id = locationID;
-            // console.log("Number of locations: " + response.payload.locations.length);
-            for (var i = 0; i < response.payload.locations.length; i++) {
-                if (response.payload.locations[i].id == id) {
-                    LocationArray.push(response.payload.locations[i].node_name);
+            console.log(locationData);
+            for (var i = 0; i < locationData.payload.locations.length; i++) {
+                if (locationData.payload.locations[i].id == locationID) {
+                    LocationArray.push(locationData.payload.locations[i].node_name);
                     // console.log(LocationArray);
                     detailObject.push({
-                        Planet: response.payload.locations[i].system_name,
-                        Node: response.payload.locations[i].node_name,
+                        Planet: locationData.payload.locations[i].system_name,
+                        Node: locationData.payload.locations[i].node_name,
                         Rarity: locationRarity,
                         Rate: dropRateLocation
-                    });
-                    // console.log(detailObject);
-                    numTRegistered++;
-                    loadSources();
-                }
+                });
+                // console.log(detailObject);
+                numTRegistered++;
+                loadSources();
             }
-            return response; // or handle the case when location is not found
-        })
-        .catch(error => {
-            console.error("Error fetching location data:", error);
-            return null; // or handle the error case
-        });
+        }
 }
 
 function getEnemyName(enemyId, dropRateEnemy, enemyRarity)
@@ -153,9 +144,6 @@ function getMissionName(missionId, dropRateMission, missionRarity)
 
 function getRelicName(relicID, itemRates, relicRarity)
 {
-    const urlRelic = "https://api.warframe.market/v1/items";
-    return fetchData(proxyUrl + urlRelic)
-    .then(response => {
         for(var l = 0; l < response.payload.items.length; l++) {
             if(response.payload.items[l].id == relicID)
             {
@@ -179,20 +167,12 @@ function getRelicName(relicID, itemRates, relicRarity)
                 loadSources();
             }
         }
-    })
-    .catch(error => {
-        console.error("Error fetching relic data:", error);
-        return null;
-    });
 }
 
 function loadSources()
 {
-    console.log("Called");
     if(numTRegistered == numTs)
     {
         console.log(detailObject);
     }
-    console.log("T 1: "+numTRegistered);
-    console.log("T 2: "+numTs);
 }
