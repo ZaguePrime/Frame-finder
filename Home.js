@@ -91,22 +91,23 @@ function getLocationName(locationID, dropRateLocation, locationRarity) {
                     LocationArray.push(locationData.payload.locations[i].node_name);
                     // console.log(LocationArray);
                     detailObject.push({
-                        Planet: locationData.payload.locations[i].system_name,
-                        Node: locationData.payload.locations[i].node_name,
-                        Rarity: locationRarity,
-                        Rate: dropRateLocation
-                });
+                    Planet: locationData.payload.locations[i].system_name,
+                    Node: locationData.payload.locations[i].node_name,
+                    Rarity: locationRarity,
+                    Rate: dropRateLocation
+            });
                 // console.log(detailObject);
-                numTRegistered++;
-                loadSources();
-            }
+            numTRegistered++;
+            loadSources();
         }
+    }
 }
 
 function getEnemyName(enemyId, dropRateEnemy, enemyRarity)
 {
     numTs++;
-    console.log(enemyData);
+    // console.log(enemyData);
+    console.log(enemyData.payload.npc.length);
     for(var j = 0; j < enemyData.payload.npc.length; j++) {
         if(enemyData.payload.npc[j].id == enemyId)
         {
