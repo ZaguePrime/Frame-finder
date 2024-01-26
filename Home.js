@@ -69,6 +69,7 @@ async function initialiseData() {
     }
 
     setupMaps();
+    populateSuggestions();
 }
 
 function initialFetch() {
@@ -116,22 +117,6 @@ function initialFetch() {
 
 
 function getLocationName(locationID, dropRateLocation, locationRarity) {
-    // numTs++;
-    //         for (var i = 0; i < locationData.payload.locations.length; i++) {
-    //             if (locationData.payload.locations[i].id == locationID) {
-    //                 LocationArray.push(locationData.payload.locations[i].node_name);
-    //                 // console.log(LocationArray);
-    //                 detailObject.push({
-    //                 Planet: locationData.payload.locations[i].system_name,
-    //                 Node: locationData.payload.locations[i].node_name,
-    //                 Rarity: locationRarity,
-    //                 Rate: dropRateLocation
-    //         });
-    //             // console.log(detailObject);
-    //         numTRegistered++;
-    //         loadSources();
-    //     }
-    // }
     numTs++;
     if(locationMap[locationID] != null)
     {
@@ -148,23 +133,6 @@ function getLocationName(locationID, dropRateLocation, locationRarity) {
 
 function getEnemyName(enemyId, dropRateEnemy, enemyRarity)
 {
-    // numTs++;
-    // // console.log(enemyData);
-    // console.log(enemyData.payload.npc.length);
-    // for(var j = 0; j < enemyData.payload.npc.length; j++) {
-    //     if(enemyData.payload.npc[j].id == enemyId)
-    //     {
-    //         detailObject.push({
-    //             Enemy: enemyData.payload.npc[j].name,
-    //             Rarity: enemyRarity,
-    //             Rate: dropRateEnemy,
-    //             Icon: enemyData.payload.npc[j].icon,
-    //         })
-    //                 // console.log(detailObject);
-    //         numTRegistered++;
-    //         loadSources();
-    //     }
-    // }
     numTs++;
     if(enemyMap[enemyId] != null)
     {
@@ -181,22 +149,6 @@ function getEnemyName(enemyId, dropRateEnemy, enemyRarity)
 
 function getMissionName(missionId, dropRateMission, missionRarity)
 {
-    // numTs++;
-    //         for(var k = 0; k < missionData.payload.missions.length; k++) {
-    //             if(missionData.payload.missions[k].id == missionId)
-    //             {
-    //                 detailObject.push({
-    //                     Mission: missionData.payload.missions[k].name,
-    //                     Rarity: missionRarity,
-    //                     Rate: dropRateMission
-    //                 })
-    //                 // console.log(detailObject);
-    //                 numTRegistered++;
-    //                 loadSources();
-    //             }
-    //         }
-
-    
     numTs++;
     if(missionMap[missionId] != null)
     {
@@ -212,30 +164,6 @@ function getMissionName(missionId, dropRateMission, missionRarity)
 
 function getRelicName(relicID, itemRates, relicRarity)
 {
-    // numTs++;
-    //     for(var l = 0; l < itemData.payload.items.length; l++) {
-    //         if(itemData.payload.items[l].id == relicID)
-    //         {
-    //             var status;
-    //             if(itemData.payload.items[l].vaulted)
-    //             {
-    //                 status = "Yes";
-    //             }
-    //             else
-    //             {
-    //                 status = "No";
-    //             }
-    //             detailObject.push({
-    //                 Relic: itemData.payload.items[l].item_name,
-    //                 Rarity: relicRarity,
-    //                 Rates: itemRates,
-    //                 Vaulted: status
-    //             })
-    //             // console.log(detailObject);
-    //             numTRegistered++;
-    //             loadSources();
-    //         }
-    //     }
     numTs++;
     if(itemMap[relicID] != null)
     {
@@ -266,5 +194,36 @@ function loadSources()
     if(numTRegistered == numTs)
     {
         console.log(detailObject);
+    }
+}
+
+function populateSuggestions(){
+    var List = document.getElementsByClassName("suggestions")[0];
+    var suggestionItems = document.getElementsByTagName("li");
+    for(var i = 0; i < itemData.payload.items.length; i++)
+    {
+        var listItem = document.createElement("li");
+        console.log(itemData.payload.items[i].item_name);
+        listItem.innerHTML = itemData.payload.items[i].item_name;
+        // listItem.setAttribute("onclick", "selectSuggestion(this)");
+        List.appendChild(listItem);
+    }
+    console.log("DONE");
+}
+
+function filterSuggestions()
+{
+    var List = document.getElementById("suggestions");
+    var suggestionItems = document.getElementsByTagName("li");
+    for(var z = 0; z < suggestionItems.length; z++)
+    {
+        if(suggestionItems[z].innerHTML.toLowerCase().includes(document.getElementById("itemName").value.toLowerCase()))
+        {
+            suggestionItems[z].style.display = "block";
+        }
+        else
+        {
+            suggestionItems[z].style.display = "none";
+        }
     }
 }

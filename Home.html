@@ -4,15 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FrameFinder</title>
-    <script type="stylesheet" src="Home.css"></script>
+    <link rel="stylesheet" href="Home.css">
     <script src="./Utilities/Loader.js"></script>
     <script src="Home.js"></script>
     <!-- Additional head elements (stylesheets, scripts, etc.) can be included here -->
 </head>
 <body>
     <section class="search">
-        <input type="text" id="itemName" placeholder="Search for an item">
+        <input class="searchBar" type="text" id="itemName" placeholder="Search for an item" onkeyup="filterSuggestions()">
         <button type="button" onclick="initialFetch()">GO</button>
+        <ul class="suggestions">
+        </ul>
         <!-- <button type="button" onclick="initialiseData()">TEST</button> -->
         <p id="payload">Result Place Holder</p>
     </section>
