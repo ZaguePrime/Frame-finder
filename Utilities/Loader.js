@@ -23,7 +23,6 @@ function fetchData(url) {
 
 function loadLocations() {
     const url = "https://api.warframe.market/v1/locations";
-
     return fetchData(proxyUrl + url)
         .then(response => {
             return response; // or handle the case when location is not found

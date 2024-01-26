@@ -8,11 +8,40 @@ var itemData = null;//stores a list of all item data
 var enemyData = null;//stores a list of all enemy data
 var missionData = null;//stores a list of all mission data
 
+var locationMap = {};
+var itemMap = {};
+var enemyMap = {};
+var missionMap = {};
+
 const proxyUrl = "https://cors-proxy.fringe.zone/";
 
 document.addEventListener('DOMContentLoaded', function () {
     initialiseData();
 });
+
+
+function setupMaps() {
+    // Create a map of location IDs to location data
+    for (var i = 0; i < locationData.payload.locations.length; i++) {
+        locationMap[locationData.payload.locations[i].id] = locationData.payload.locations[i];
+    }
+
+    // Create a map of item IDs to item data
+    for (var i = 0; i < itemData.payload.items.length; i++) {
+        itemMap[itemData.payload.items[i].id] = itemData.payload.items[i];
+    }
+
+    // Create a map of enemy IDs to enemy data
+    for (var i = 0; i < enemyData.payload.npc.length; i++) {
+        enemyMap[enemyData.payload.npc[i].id] = enemyData.payload.npc[i];
+    }
+
+    // Create a map of mission IDs to mission data
+    for (var i = 0; i < missionData.payload.missions.length; i++) {
+        missionMap[missionData.payload.missions[i].id] = missionData.payload.missions[i];
+    }
+    console.log("DONE");
+}
 
 
 async function initialiseData() {
@@ -38,6 +67,8 @@ async function initialiseData() {
     } catch (error) {
         throw error; // Propagate the error to the caller
     }
+
+    setupMaps();
 }
 
 function initialFetch() {
@@ -85,89 +116,147 @@ function initialFetch() {
 
 
 function getLocationName(locationID, dropRateLocation, locationRarity) {
+    // numTs++;
+    //         for (var i = 0; i < locationData.payload.locations.length; i++) {
+    //             if (locationData.payload.locations[i].id == locationID) {
+    //                 LocationArray.push(locationData.payload.locations[i].node_name);
+    //                 // console.log(LocationArray);
+    //                 detailObject.push({
+    //                 Planet: locationData.payload.locations[i].system_name,
+    //                 Node: locationData.payload.locations[i].node_name,
+    //                 Rarity: locationRarity,
+    //                 Rate: dropRateLocation
+    //         });
+    //             // console.log(detailObject);
+    //         numTRegistered++;
+    //         loadSources();
+    //     }
+    // }
     numTs++;
-            for (var i = 0; i < locationData.payload.locations.length; i++) {
-                if (locationData.payload.locations[i].id == locationID) {
-                    LocationArray.push(locationData.payload.locations[i].node_name);
-                    // console.log(LocationArray);
-                    detailObject.push({
-                    Planet: locationData.payload.locations[i].system_name,
-                    Node: locationData.payload.locations[i].node_name,
-                    Rarity: locationRarity,
-                    Rate: dropRateLocation
-            });
-                // console.log(detailObject);
-            numTRegistered++;
-            loadSources();
-        }
+    if(locationMap[locationID] != null)
+    {
+        detailObject.push({
+            Planet: locationMap[locationID].system_name,
+            Node: locationMap[locationID].node_name,
+            Rarity: locationRarity,
+            Rate: dropRateLocation
+        });
+        numTRegistered++;
+        loadSources();
     }
 }
 
 function getEnemyName(enemyId, dropRateEnemy, enemyRarity)
 {
+    // numTs++;
+    // // console.log(enemyData);
+    // console.log(enemyData.payload.npc.length);
+    // for(var j = 0; j < enemyData.payload.npc.length; j++) {
+    //     if(enemyData.payload.npc[j].id == enemyId)
+    //     {
+    //         detailObject.push({
+    //             Enemy: enemyData.payload.npc[j].name,
+    //             Rarity: enemyRarity,
+    //             Rate: dropRateEnemy,
+    //             Icon: enemyData.payload.npc[j].icon,
+    //         })
+    //                 // console.log(detailObject);
+    //         numTRegistered++;
+    //         loadSources();
+    //     }
+    // }
     numTs++;
-    // console.log(enemyData);
-    console.log(enemyData.payload.npc.length);
-    for(var j = 0; j < enemyData.payload.npc.length; j++) {
-        if(enemyData.payload.npc[j].id == enemyId)
-        {
-            detailObject.push({
-                Enemy: enemyData.payload.npc[j].name,
-                Rarity: enemyRarity,
-                Rate: dropRateEnemy,
-                Icon: enemyData.payload.npc[j].icon,
-            })
-                    // console.log(detailObject);
-            numTRegistered++;
-            loadSources();
-        }
+    if(enemyMap[enemyId] != null)
+    {
+        detailObject.push({
+            Enemy: enemyMap[enemyId].name,
+            Rarity: enemyRarity,
+            Rate: dropRateEnemy,
+            Icon: enemyMap[enemyId].icon,
+        })
+        numTRegistered++;
+        loadSources();
     }
 }
 
 function getMissionName(missionId, dropRateMission, missionRarity)
 {
+    // numTs++;
+    //         for(var k = 0; k < missionData.payload.missions.length; k++) {
+    //             if(missionData.payload.missions[k].id == missionId)
+    //             {
+    //                 detailObject.push({
+    //                     Mission: missionData.payload.missions[k].name,
+    //                     Rarity: missionRarity,
+    //                     Rate: dropRateMission
+    //                 })
+    //                 // console.log(detailObject);
+    //                 numTRegistered++;
+    //                 loadSources();
+    //             }
+    //         }
+
+    
     numTs++;
-            for(var k = 0; k < missionData.payload.missions.length; k++) {
-                if(missionData.payload.missions[k].id == missionId)
-                {
-                    detailObject.push({
-                        Mission: missionData.payload.missions[k].name,
-                        Rarity: missionRarity,
-                        Rate: dropRateMission
-                    })
-                    // console.log(detailObject);
-                    numTRegistered++;
-                    loadSources();
-                }
-            }
+    if(missionMap[missionId] != null)
+    {
+        detailObject.push({
+            Mission: missionMap[missionId].name,
+            Rarity: missionRarity,
+            Rate: dropRateMission
+        })
+        numTRegistered++;
+        loadSources();
+    }
 }
 
 function getRelicName(relicID, itemRates, relicRarity)
 {
+    // numTs++;
+    //     for(var l = 0; l < itemData.payload.items.length; l++) {
+    //         if(itemData.payload.items[l].id == relicID)
+    //         {
+    //             var status;
+    //             if(itemData.payload.items[l].vaulted)
+    //             {
+    //                 status = "Yes";
+    //             }
+    //             else
+    //             {
+    //                 status = "No";
+    //             }
+    //             detailObject.push({
+    //                 Relic: itemData.payload.items[l].item_name,
+    //                 Rarity: relicRarity,
+    //                 Rates: itemRates,
+    //                 Vaulted: status
+    //             })
+    //             // console.log(detailObject);
+    //             numTRegistered++;
+    //             loadSources();
+    //         }
+    //     }
     numTs++;
-        for(var l = 0; l < itemData.payload.items.length; l++) {
-            if(itemData.payload.items[l].id == relicID)
-            {
-                var status;
-                if(itemData.payload.items[l].vaulted)
-                {
-                    status = "Yes";
-                }
-                else
-                {
-                    status = "No";
-                }
-                detailObject.push({
-                    Relic: itemData.payload.items[l].item_name,
-                    Rarity: relicRarity,
-                    Rates: itemRates,
-                    Vaulted: status
-                })
-                // console.log(detailObject);
-                numTRegistered++;
-                loadSources();
-            }
+    if(itemMap[relicID] != null)
+    {
+        var status;
+        if(itemMap[relicID].vaulted)
+        {
+            status = "Yes";
         }
+        else
+        {
+            status = "No";
+        }
+        detailObject.push({
+            Relic: itemMap[relicID].item_name,
+            Rarity: relicRarity,
+            Rates: itemRates,
+            Vaulted: status
+        })
+        numTRegistered++;
+        loadSources();
+    }
 }
 
 function loadSources()
