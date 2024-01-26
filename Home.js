@@ -17,6 +17,8 @@ const proxyUrl = "https://cors-proxy.fringe.zone/";
 
 document.addEventListener('DOMContentLoaded', function () {
     initialiseData();
+    var List = document.getElementsByClassName("suggestions")[0];
+    List.style.display = "none";
 });
 
 
@@ -70,6 +72,7 @@ async function initialiseData() {
 
     setupMaps();
     populateSuggestions();
+
 }
 
 function initialFetch() {
@@ -203,7 +206,11 @@ function populateSuggestions(){
     for(var i = 0; i < itemData.payload.items.length; i++)
     {
         var listItem = document.createElement("li");
-        console.log(itemData.payload.items[i].item_name);
+        listItem.onclick = function() {
+            document.getElementById("itemName").value = this.innerHTML;
+            List.style.display = "none";
+            initialFetch();
+        };
         listItem.innerHTML = itemData.payload.items[i].item_name;
         // listItem.setAttribute("onclick", "selectSuggestion(this)");
         List.appendChild(listItem);
@@ -213,8 +220,15 @@ function populateSuggestions(){
 
 function filterSuggestions()
 {
-    var List = document.getElementById("suggestions");
+    var List = document.getElementsByClassName("suggestions")[0];
     var suggestionItems = document.getElementsByTagName("li");
+    if(document.getElementById("itemName").value.toLowerCase() == "")
+    {
+        List.style.display = "none";
+        return;
+    }
+    if(List.style.display === "none")
+        List.style.display = "block";
     for(var z = 0; z < suggestionItems.length; z++)
     {
         if(suggestionItems[z].innerHTML.toLowerCase().includes(document.getElementById("itemName").value.toLowerCase()))
