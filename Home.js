@@ -8,6 +8,7 @@ var itemData = null;//stores a list of all item data
 var enemyData = null;//stores a list of all enemy data
 var missionData = null;//stores a list of all mission data
 
+const itemImageURL = "https://api.warframe.market/v1/items/";
 var locationMap = {};
 var itemMap = {};
 var enemyMap = {};
@@ -86,12 +87,15 @@ function initialFetch() {
     itemName = itemName.replaceAll(" ", "_");
     console.log(itemName);
 
+    var finalImageURL = [];
     const url1 = "https://api.warframe.market/v1/items/";
     const url2 = "/dropsources?include=item";
     const finalURL = url1 + itemName +  url2;
 
     fetchData(proxyUrl + finalURL)
         .then(response => {
+            finalImageURL = getImage(response, finalImageURL, itemName);
+            console.log(finalImageURL);
             for(var i = 0; i < response.payload.dropsources.length; i++) {
                 if(response.payload.dropsources[i].type == 'mission' && response.payload.dropsources[i].location != null)
                 {
@@ -240,4 +244,16 @@ function filterSuggestions()
             suggestionItems[z].style.display = "none";
         }
     }
+}
+
+function getImage(response, urlArr, item)
+{
+    console.log("Item "+item);
+    for(var i = 0; i < response.include.item.items_in_set.length; i++)
+    {
+        console.log(response.include.item.items_in_set[i].icon);
+        if(response.include.item.items_in_set[i].icon.includes(item))
+            urlArr.push(itemImageURL+response.include.item.items_in_set[i].icon);
+    }
+    return urlArr;
 }
