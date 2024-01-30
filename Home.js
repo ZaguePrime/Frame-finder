@@ -94,7 +94,16 @@ function initialFetch() {
 
     fetchData(proxyUrl + finalURL)
         .then(response => {
-            finalImageURL = getImage(response, finalImageURL, itemName);
+            if(!itemName.includes("set"))
+            {
+                finalImageURL = getImage(response, finalImageURL, itemName);
+            }
+            else{
+                for(var i = 0; i < response.include.item.items_in_set.length; i++)
+                {
+                    finalImageURL.push(itemImageURL+response.include.item.items_in_set[i].icon);
+                }
+            }
             console.log(finalImageURL);
             for(var i = 0; i < response.payload.dropsources.length; i++) {
                 if(response.payload.dropsources[i].type == 'mission' && response.payload.dropsources[i].location != null)
@@ -246,14 +255,3 @@ function filterSuggestions()
     }
 }
 
-function getImage(response, urlArr, item)
-{
-    console.log("Item "+item);
-    for(var i = 0; i < response.include.item.items_in_set.length; i++)
-    {
-        console.log(response.include.item.items_in_set[i].icon);
-        if(response.include.item.items_in_set[i].icon.includes(item))
-            urlArr.push(itemImageURL+response.include.item.items_in_set[i].icon);
-    }
-    return urlArr;
-}

@@ -71,3 +71,44 @@ function loadItems()
             return null;
         });
 }
+
+function getImage(response, urlArr, item)
+{
+    console.log("Item "+item);
+    // for(var i = 0; i < response.include.item.items_in_set.length; i++)
+    // {
+    //     console.log(response.include.item.items_in_set[i].icon);
+    //     if(response.include.item.items_in_set[i].icon.includes(item))
+    //         urlArr.push(itemImageURL+response.include.item.items_in_set[i].icon);
+    // }
+    var bestMatchIndex = findBestMatch(item, response);
+    urlArr.push(itemImageURL+response.include.item.items_in_set[bestMatchIndex].icon);
+    return urlArr;
+}
+
+function findBestMatch(item, response)
+{
+    var bestMatch = -1;
+    var bestMatchIndex = -1;
+    for(var i = 0; i < response.include.item.items_in_set.length; i++)
+    {
+        var matchPercentage = 0;
+        for(const char of item)
+        {
+            for(const char2 of response.include.item.items_in_set[i].icon)
+            {
+                if(char == char2)
+                {
+                    matchPercentage++;
+                    continue;
+                }
+            }
+        }
+        if(matchPercentage > bestMatch)
+        {
+            bestMatch = matchPercentage;
+            bestMatchIndex = i;
+        }
+    }
+    return bestMatchIndex;
+}
