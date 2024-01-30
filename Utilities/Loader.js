@@ -82,7 +82,7 @@ function getImage(response, urlArr, item)
     //         urlArr.push(itemImageURL+response.include.item.items_in_set[i].icon);
     // }
     var bestMatchIndex = findBestMatch(item, response);
-    urlArr.push(itemImageURL+response.include.item.items_in_set[bestMatchIndex].icon);
+    urlArr.push(itemImageURL+response.include.item.items_in_set[bestMatchIndex].thumb);
     return urlArr;
 }
 

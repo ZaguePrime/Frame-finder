@@ -8,7 +8,7 @@ var itemData = null;//stores a list of all item data
 var enemyData = null;//stores a list of all enemy data
 var missionData = null;//stores a list of all mission data
 
-const itemImageURL = "https://api.warframe.market/v1/items/";
+const itemImageURL = "https://warframe.market/static/assets/";
 var locationMap = {};
 var itemMap = {};
 var enemyMap = {};
@@ -97,6 +97,7 @@ function initialFetch() {
             if(!itemName.includes("set"))
             {
                 finalImageURL = getImage(response, finalImageURL, itemName);
+                loadImage(finalImageURL[0]);
             }
             else{
                 for(var i = 0; i < response.include.item.items_in_set.length; i++)
@@ -254,4 +255,17 @@ function filterSuggestions()
         }
     }
 }
+
+function createCard(){
+    var card = document.createElement("div");
+    card.className = "card";
+    return card;
+}
+
+function loadImage(imageURL)
+{
+    document.getElementById("demoImage").src = imageURL;
+}
+
+
 
