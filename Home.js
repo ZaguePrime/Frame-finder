@@ -106,6 +106,10 @@ function initialFetch() {
                 }
             }
             console.log(finalImageURL);
+            if(response.payload.dropsources===null || response.payload.dropsources.length===0)
+            {
+                console.log("No data found with this item, if it is a set please consider looking at individual components");
+            }
             for(var i = 0; i < response.payload.dropsources.length; i++) {
                 if(response.payload.dropsources[i].type == 'mission' && response.payload.dropsources[i].location != null)
                 {
@@ -210,7 +214,11 @@ function loadSources()
     console.log("Promised:"+numTs);
     if(numTRegistered == numTs)
     {
-        console.log(detailObject);
+        if(detailObject == [])
+        {
+            console.log("No data found with this item, if it is a set please consider looking at individual components");
+        }
+        console.log(detailObject+"HERE");
     }
 }
 
@@ -257,9 +265,7 @@ function filterSuggestions()
 }
 
 function createCard(){
-    var card = document.createElement("div");
-    card.className = "card";
-    return card;
+    
 }
 
 function loadImage(imageURL)

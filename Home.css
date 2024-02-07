@@ -22,3 +22,7 @@
     background-color: #074554;
     color: white;
 }
+
+.drops{
+    list-style-type: none;
+}
