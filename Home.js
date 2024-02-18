@@ -218,7 +218,7 @@ function loadSources()
         {
             console.log("No data found with this item, if it is a set please consider looking at individual components");
         }
-        console.log(detailObject+"HERE");
+        console.log(detailObject);
     }
 }
 
