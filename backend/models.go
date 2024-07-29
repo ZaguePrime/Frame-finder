@@ -1,6 +1,6 @@
-package models
+package backend
 
-type AllItems struct {
+type Response struct {
 	Items []Item `json:"items"`
 }
 
